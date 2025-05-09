@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orbital Auto Spa Booking</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0a0f2c;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 1rem;
+    }
+
+    form {
+      background: #1a1f3d;
+      padding: 2rem;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+    }
+
+    input, select, textarea, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.25rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #00bcd4;
+      color: #0a0f2c;
+      font-weight: bold;
+      margin-top: 1.5rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00acc1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Book Your Detail - Orbital Auto Spa</h1>
+  <form id="booking-form">
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required>
+
+    <label for="service">Choose Your Service:</label>
+    <select id="service" name="service" required>
+      <option value="Exterior Detail">Exterior Detail</option>
+      <option value="Interior Detail">Interior Detail</option>
+      <option value="Combo Package">Combo Package</option>
+    </select>
+
+    <label for="date">Preferred Date:</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="notes">Additional Notes:</label>
+    <textarea id="notes" name="notes" rows="4" placeholder="Let us know any details about your car or location."></textarea>
+
+    <button type="submit">Pay $50 Deposit & Book</button>
+  </form>
+
+  <script>
+    const stripe = Stripe('pk_test_51RMtA94GZd1Igu8M6MUtJkf01DMJ9MB7aArfrSBCCz2gDJgHtpp1jDUB3xBfo2UU2y3VIyIyeGZU19WOpuq0Qezx00MbeKal7G');
+
+    document.getElementById('booking-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const { error } = await stripe.redirectToCheckout({
+        lineItems: [
+          {
+            price: 'price_1RMtC04GZd1Igu8MkGKjcbtE',
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        successUrl: 'https://OrbitalAutoSpa.github.io/orbital-auto-spa/success.html',
+        cancelUrl: 'https://OrbitalAutoSpa.github.io/orbital-auto-spa/cancel.html',
+      });
+
+      if (error) {
+        console.error('Stripe checkout error:', error);
+        alert('There was an error redirecting to checkout.');
+      }
+    });
+  </script>
+</body>
+</html>
